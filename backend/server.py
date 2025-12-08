@@ -12,6 +12,9 @@ import openpyxl
 from openpyxl import load_workbook
 import re
 from datetime import datetime
+from pydantic import BaseModel
+from openai import OpenAI
+
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
