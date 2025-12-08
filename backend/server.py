@@ -20,6 +20,19 @@ load_dotenv(ROOT_DIR / '.env')
 app = FastAPI()
 # backend/server.py
 
+@app.get("/debug/files")
+def debug_files():
+    here = Path(__file__).parent
+    data_dir = here / "data"
+
+    return {
+        "cwd": os.getcwd(),
+        "here": str(here),
+        "data_dir_exists": data_dir.exists(),
+        "data_files": [f.name for f in data_dir.glob("*")] if data_dir.exists() else [],
+    }
+
+
 @app.get("/")
 def read_root():
     return {"message": "Dealsub backend is running on Cloud Run!"}
