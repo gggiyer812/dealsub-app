@@ -13,7 +13,7 @@ import axios from 'axios';
 
 
 
-const BACKEND_URL = "https://dealsub-app-backend-147614082674.europe-west1.run.app";
+const BACKEND_URL = "https://dealsub-app-backend-147614082674.us-central1.run.app";
 const API = `${BACKEND_URL}/api`;
 
 function LandingPage() {
