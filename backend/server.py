@@ -720,16 +720,16 @@ async def download_csv(data: Dict[str, Any]):
 @api_router.post("/chat", response_model=ChatResponse)
 async def chat_with_data(request: ChatRequest):
     """
-    Chat with the uploaded data using GPT-5.1
+    Chat with the uploaded data using OpenAI GPT model.
     """
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
-        
-        # Get API key from environment
-        api_key = os.environ.get('EMERGENT_LLM_KEY')
+        # Get OpenAI API key from environment
+        api_key = os.environ.get("OPENAI_API_KEY")
         if not api_key:
-            raise HTTPException(status_code=500, detail="LLM API key not configured")
-        
+            raise HTTPException(status_code=500, detail="OpenAI API key not configured")
+
+        client = OpenAI(api_key=api_key)
+
         # Prepare data context summary
         data_summary = f"""You are analyzing standardized deal submission data for {request.company}.
 
@@ -741,22 +741,21 @@ Sample data (first 5 rows):
 {str(request.data_context[:5])}
 
 Please answer questions about this data accurately and concisely."""
-        
-        # Initialize chat with GPT-5.1
-        chat = LlmChat(
-            api_key=api_key,
-            session_id=f"chat-{request.company}",
-            system_message=data_summary
-        ).with_model("openai", "gpt-5.1")
-        
-        # Create user message
-        user_message = UserMessage(text=request.message)
-        
-        # Get response
-        response = await chat.send_message(user_message)
-        
-        return ChatResponse(response=response)
-    
+
+        # Call OpenAI chat completion
+        response = client.chat.completions.create(
+            model="gpt-4o",  # or another GPT model you prefer
+            messages=[
+                {"role": "system", "content": data_summary},
+                {"role": "user", "content": request.message},
+            ],
+            temperature=0.4,
+            max_tokens=800,
+        )
+
+        answer = response.choices[0].message.content.strip()
+        return ChatResponse(response=answer)
+
     except Exception as e:
         logger.error(f"Error in chat: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Error processing chat: {str(e)}")
