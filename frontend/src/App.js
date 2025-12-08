@@ -71,7 +71,6 @@ function LandingPage() {
             Retail Marketplace to Optimize, Automate, and Stay in Control
           </p>
         </header>
-	<BackendStatus />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           {modules.map((module) => {
