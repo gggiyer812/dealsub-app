@@ -727,7 +727,7 @@ async def chat_with_data(request: ChatRequest):
     """
     try:
         # Get OpenAI API key from environment
-        api_key = "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"
+        api_key = "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"
         if not api_key:
             raise HTTPException(status_code=500, detail="OpenAI API key not configured")
 
